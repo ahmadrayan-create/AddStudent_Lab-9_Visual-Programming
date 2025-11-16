@@ -7,7 +7,6 @@ namespace _243557_Windows_From_App___Data_Base__
 {
     public partial class Form1 : Form
     {
-        // Connection string as specified, using assumed database name "StudentDB"
         private const string ConnectionString =
             "Data Source=DESKTOP-K2S8IVF\\SQLEXPRESS;Initial Catalog=StudentDB;Integrated Security=True;Encrypt=False;Trust Server Certificate=True";
 
@@ -27,7 +26,7 @@ namespace _243557_Windows_From_App___Data_Base__
         {
             string selectQuery = "SELECT * FROM Students ORDER BY RegId DESC";
 
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            SqlConnection conn = new SqlConnection(ConnectionString);
             {
                 try
                 {
@@ -48,9 +47,7 @@ namespace _243557_Windows_From_App___Data_Base__
             LoadStudentData();
         }
 
-        #endregion
 
-        #region Task 2: Add New Student (CREATE Operation)
 
         private void btnAddStudent_Click(object sender, EventArgs e)
         {
@@ -73,11 +70,14 @@ namespace _243557_Windows_From_App___Data_Base__
 
                     cmd.Parameters.AddWithValue("@Name", txtSName.Text);
                     cmd.Parameters.AddWithValue("@FatherName", txtFatherName.Text);
+                    
                     cmd.Parameters.AddWithValue("@CNIC", txtCNIC.Text);
                     cmd.Parameters.AddWithValue("@Gender", cmbGender.SelectedItem.ToString());
+                    
                     cmd.Parameters.AddWithValue("@DOB", dtpDOB.Value.Date);
                     cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
                     cmd.Parameters.AddWithValue("@DegreeProgram", cmbDegreeProgram.SelectedItem.ToString());
+                    
                     cmd.Parameters.AddWithValue("@MatricGrade", float.TryParse(txtMatricGrade.Text, out float mGrade) ? mGrade : 0.0f);
                     cmd.Parameters.AddWithValue("@InterGrade", float.TryParse(txtInterGrade.Text, out float iGrade) ? iGrade : 0.0f);
 
@@ -102,6 +102,7 @@ namespace _243557_Windows_From_App___Data_Base__
             {
                 MessageBox.Show("Please enter a valid Registration ID (RegId) to update.", "Input Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+                
             }
 
             string updateQuery = @"
@@ -118,6 +119,7 @@ namespace _243557_Windows_From_App___Data_Base__
 
                     cmd.Parameters.AddWithValue("@RegId", regId);
                     cmd.Parameters.AddWithValue("@Name", txtUpdateName.Text);
+                    
                     cmd.Parameters.AddWithValue("@Address", txtUpdateAddress.Text);
                     cmd.Parameters.AddWithValue("@MatricGrade", float.TryParse(txtUpdateMatricGrade.Text, out float mGrade) ? mGrade : 0.0f);
                     cmd.Parameters.AddWithValue("@InterGrade", float.TryParse(txtUpdateInterGrade.Text, out float iGrade) ? iGrade : 0.0f);
@@ -136,6 +138,8 @@ namespace _243557_Windows_From_App___Data_Base__
                 {
                     MessageBox.Show($"Update Failed: {ex.Message}", "Application Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                
             
         }
 
@@ -147,6 +151,8 @@ namespace _243557_Windows_From_App___Data_Base__
                 MessageBox.Show("Please enter a valid Registration ID (RegId) to delete.", "Input Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+
 
             DialogResult confirmResult = MessageBox.Show(
                 $"Are you sure you want to delete student record with RegId: {regId}?",
